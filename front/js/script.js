@@ -2,13 +2,16 @@
 fetch('http://localhost:3000/api/products')
     .then(res => {
         if (res.ok) {
+          console.log(res);
             return res.json();
           }
         })
         
-    // insertion des éléments dans la page d'accueil (DOM)
+    // insertion des éléments dans la page d'accueil
     .then((products) => {
+      console.log(products);
       for (product of products) {
+        console.log(product);
           document.getElementById("items").innerHTML += `<a href="./product.html?id=${product._id}">
               <article>
                   <img src="${product.imageUrl}" alt="${product.altTxt}"/>
@@ -20,4 +23,4 @@ fetch('http://localhost:3000/api/products')
       })
     
     // message d'erreur
-    .catch(err => console.log(err))
+    .catch(err => console.log(err, 'Données non accessibles'))
