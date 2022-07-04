@@ -1,4 +1,4 @@
-// requête de l'api et récupération des données
+// Requête de l'api et récupération des données
 fetch('http://localhost:3000/api/products')
     .then(res => {
         if (res.ok) {
@@ -7,7 +7,7 @@ fetch('http://localhost:3000/api/products')
           }
         })
         
-    // insertion des éléments dans la page d'accueil
+    // Insertion des éléments dans la page d'accueil
     .then((products) => {
       console.log(products);
       for (product of products) {
@@ -22,5 +22,5 @@ fetch('http://localhost:3000/api/products')
           }     
       })
     
-    // message d'erreur
+    // Message d'erreur
     .catch(err => console.log(err, 'Données non accessibles'))
