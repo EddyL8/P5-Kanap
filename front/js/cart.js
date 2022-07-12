@@ -5,6 +5,8 @@ console.log(productsInCart)
 // Message si le panier est vide
 if (productsInCart === null || productsInCart == 0) {
   document.getElementById("cart__items").textContent = 'Votre panier est vide.'
+  document.querySelector("#totalQuantity").innerHTML = "0";
+  document.querySelector("#totalPrice").innerHTML = "0";
 }
 
 else {
@@ -51,3 +53,18 @@ else {
     // Message d'erreur
     .catch(err => console.log(err, 'Données non accessibles'))
 }
+
+let totalPrice = 0;
+let productsQuantity = 0;
+
+for (let product of productsInCart) {
+  totalPrice += product.price * product.quantity;
+  productsQuantity += product.quantity;
+}
+
+let showPrice = document.querySelector("#totalPrice");
+showPrice.innerHTML += `${totalPrice}`;
+
+let showItems = document.querySelector("#totalQuantity");
+showItems.innerHTML += `${productsQuantity}`;
+

@@ -1,7 +1,7 @@
 // Récupération de l'id du produit à afficher
-let str = window.location.href;
-let newUrl = new URL(str);
-let productId = newUrl.searchParams.get('id');
+const str = window.location.href;
+const newUrl = new URL(str);
+const productId = newUrl.searchParams.get('id');
 console.log(str, newUrl, productId);
 
 // Requête de l'api et récupération des données
@@ -19,25 +19,40 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     .catch(err => console.log(err, 'Données non accessibles'))
 
 // Insertion des éléments dans la page produit
-let showProduct = (product) => {
+const showProduct = (product) => {
     console.log(product);
-    document.querySelector(".item__img").innerHTML +=
-        `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-    document.getElementById("title").textContent = product.name;
-    document.getElementById("price").textContent = product.price;
-    document.getElementById("description").textContent = product.description;
 
-    // Sélection de la couleur du produit    
-    for (colors of product.colors) {
-        console.log(colors);
-        document.querySelector("#colors").innerHTML += `<option value="${colors}">${colors}</option>`
-    }
+    const productImgUrl = document.createElement("img");
+    document.querySelector(".item__img").appendChild(productImgUrl);
+    productImgUrl.src = product.imageUrl;
+    productImgUrl.alt = product.altTxt;
+  
+    const productName = document.getElementById("title");
+    productName.textContent = product.name;
+  
+    const productPrice = document.getElementById("price");
+    productPrice.textContent = product.price;
+  
+    const productDescription = document.getElementById("description");
+    productDescription.textContent = product.description;
+
+   // Sélection et option des couleurs
+   for (color of product.colors) {
+    const select = document.querySelector("select");
+    
+    const option = document.createElement("option");
+    option.textContent = color;
+    option.value = color;
+    
+    select.appendChild(option);
+   }
+    
 
     // Envoi au panier
-    let addToCartButton = document.getElementById("addToCart");
+    const addToCartButton = document.getElementById("addToCart");
     addToCartButton.addEventListener("click", () => {
-        let productColor = document.getElementById("colors").value;
-        let productQuantity = document.getElementById("quantity").value;
+        const productColor = document.getElementById("colors").value;
+        const productQuantity = document.getElementById("quantity").value;
 
         // Alerte choix couleur et quantité
         if (productColor == "" || productQuantity <= 0 || productQuantity >= 101) {
@@ -53,7 +68,7 @@ let showProduct = (product) => {
                 quantity: parseInt(productQuantity) // Utilisation de parseInt pour additionner les quantités
             }
 
-            let cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"))??[];
+            const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"))??[];
 
             // Vérification des produits (même id et même couleur) et ajout dans le panier
             let foundProduct = cartFromLocalStorage.find(p => p.id === item.id && p.color === item.color); 
