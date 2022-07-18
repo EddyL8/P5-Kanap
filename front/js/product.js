@@ -43,7 +43,7 @@ const showProduct = (product) => {
     const option = document.createElement("option");
     option.textContent = color;
     option.value = color;
-    
+
     select.appendChild(option);
    }
     
@@ -83,7 +83,7 @@ const showProduct = (product) => {
         }
 
         // Fenêtre popup d'ajout et de redirection vers le panier
-        if (window.confirm(`Votre commande est ajoutée au panier !\nCliquez sur "OK" pour le consulter, sinon sur "Annuler" pour poursuivre vos achats.`)) {
+        if (window.confirm(`Votre sélection a été ajoutée au panier !\nCliquez sur "OK" pour le consulter, sinon sur "Annuler" pour poursuivre vos achats.`)) {
             window.location.href = "cart.html";
         }
     });
