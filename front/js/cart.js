@@ -110,16 +110,16 @@ console.log(itemFromCart)
             e.preventDefault();
             itemFromCart[i].quantity = input.value;
 
-              if (itemFromCart[i].quantity <= 0 || itemFromCart[i].quantity > 100) {
-                  return alert('Veuillez choisir une quantité comprise entre 1 et 100.')
-              }
-                  localStorage.setItem("cart", JSON.stringify(itemFromCart));
-                  console.log(itemFromCart);
-                  location.reload();
-            })
+            if (itemFromCart[i].quantity <= 0 || itemFromCart[i].quantity > 100) {
+                return alert('Veuillez choisir une quantité comprise entre 1 et 100.')
+            }
+              localStorage.setItem("cart", JSON.stringify(itemFromCart));
+              console.log(itemFromCart);
+              location.reload();
+          })
 
             // Calcul du total des quantités du panier
-            totalQuantity = 0
+            let totalQuantity = 0;
 
             for (let i = 0; i < itemFromCart.length; i++) {
                 totalQuantity += Number(itemFromCart[i].quantity);
@@ -128,7 +128,7 @@ console.log(itemFromCart)
             }
 
             // Calcul du total des prix du panier
-            totalPrice = 0;
+            let totalPrice = 0;
 
             for (let i = 0; i < itemFromCart.length; i++) {
             totalPrice += Number(itemFromCart[i].quantity * productFromApi.price);
