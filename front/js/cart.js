@@ -112,19 +112,21 @@ console.log(itemFromCart)
             e.preventDefault();
             itemFromCart[i].quantity = input.value;//Quentin : tu stockes une valeur avant même de tester sa validité ? 
 
-              if (itemFromCart[i].quantity <= 0 || itemFromCart[i].quantity > 100) {
-                  return alert('Veuillez choisir une quantité comprise entre 1 et 100.') 
-              }
-                  localStorage.setItem("cart", JSON.stringify(itemFromCart));
-                  console.log(itemFromCart);
-                  location.reload();
-            })
+            if (itemFromCart[i].quantity <= 0 || itemFromCart[i].quantity > 100) {
+                return alert('Veuillez choisir une quantité comprise entre 1 et 100.')
+            }
+              localStorage.setItem("cart", JSON.stringify(itemFromCart));
+              console.log(itemFromCart);
+              location.reload();
+          })
 
             //Quentin : tu recalcule donc le total et la quantité total à chaque item ajouté, tu es sur la bonne voie. :)
             // ça serait bien pratique de pouvoir tout recalculer quand on enlève un item ou quand on change une quantité ... ;)
 
             // Calcul du total des quantités du panier
-            totalQuantity = 0 //Quentin : attention ! c'est tentant de déclarer une variable sans let,const,var et pas mettre de ; mais c'est TRES risqué !
+
+            let totalQuantity = 0;
+            //Quentin : attention ! c'est tentant de déclarer une variable sans let,const,var et pas mettre de ; mais c'est TRES risqué !
 
             //Quentin : ok, je comprends la confusion du i. Je te redirige vers la documentation : https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Loops_and_iteration
             //et sur la boucle for...of : https://www.youtube.com/watch?v=-v26YUj37Uc
@@ -136,7 +138,7 @@ console.log(itemFromCart)
             }
 
             // Calcul du total des prix du panier
-            totalPrice = 0;
+            let totalPrice = 0;
 
             for (let i = 0; i < itemFromCart.length; i++) {
               totalPrice += Number(itemFromCart[i].quantity * productFromApi.price);//Quentin : tu multiplies l'un par l'autre et tu t'assure que c'est bien un nombre qu'on additionne. C'est bien. Mais qu'est-ce qui te garantis que l'un et l'autre sont des nombres ? o_o
