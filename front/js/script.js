@@ -37,4 +37,4 @@
   })
 
   // Message d'erreur
-  .catch(err => console.log(err, 'Données non accessibles'))
+  .catch(err => console.log(err, 'Données non accessibles')) //quentin : astuce "console.error" affiche une vrai erreur en console ;)

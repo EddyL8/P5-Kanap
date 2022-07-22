@@ -1,5 +1,5 @@
 // Récupération des données du local storage
-const itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
+let itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
 
 fetch ('http://localhost:3000/api/products')
   .then(res => {
@@ -84,56 +84,51 @@ fetch ('http://localhost:3000/api/products')
               deleteItem.className = "deleteItem";
               cart__item__content__settings__delete.appendChild(deleteItem).textContent = "Supprimer";
 
-          // Changement de quantité dans le panier
-          function changeItemsQuantityFromCart() {
-            input.addEventListener("change" ,(itemQuantity) => {
+        // Changement de quantité dans le panier
+        function changeItemsQuantityFromCart() {
+          input.addEventListener("change" ,(e) => {
+            e.preventDefault();
 
-              if(input.value >= 1 && input.value <= 100) {
-                let item = input.closest('article');
-                input.id = item.dataset.id;
-                input.color = item.dataset.color;
-                input.value = itemQuantity.target.value;
-                
-                let itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
-                itemsFromCart.find(product => product.id === input.id && product.color === input.color).quantity = input.value;
-                localStorage.setItem('cart',JSON.stringify(itemsFromCart));
-                totalQuantityAndPriceFromCart();            
-              }
+            if(input.value <= 0 || input.value > 100) {
+              alert('Veuillez saisir une quantité entre 1 et 100.');
+              return;
+            }
 
-              else if(input.value <= 0 || input.value > 100) {
-                alert('Veuillez saisir une quantité entre 1 et 100.');
-              }
-            })  
-          } 
-          changeItemsQuantityFromCart();
+            let itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
+            itemsFromCart.find(product => product.id === item.id && product.color === item.color).quantity = input.value;
+            localStorage.setItem('cart',JSON.stringify(itemsFromCart));
+            
+            totalQuantityAndPriceFromCart();            
+          })  
+        } 
+        changeItemsQuantityFromCart();
 
         // Suppression d'un produit dans le panier
         function deleteItemsFromCart() {
-          const deleteItem = document.getElementsByClassName('deleteItem');
-          const itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
-          
-          for (let i = 0; i < deleteItem.length; i++) {
-            let deleteItems = deleteItem[i];
-            let item = deleteItem[i].closest('article');
 
-            deleteItems.addEventListener("click",(e) => {
-              e.preventDefault();    
-              const itemsFromCartIndex = itemsFromCart.findIndex(product => 
-                    product.id === item.dataset.id && product.color === item.dataset.color);
-                
-              itemsFromCart.splice(itemsFromCartIndex, 1); 
-              localStorage.setItem('cart',JSON.stringify(itemsFromCart)); 
-                
-              location.reload();
-              }      
-            )    
+        deleteItem.addEventListener("click",(e) => {
+          e.preventDefault();    
+          const itemsFromCartIndex = itemsFromCart.findIndex(product => product.id === item.id && product.color === item.color);
+            
+          itemsFromCart.splice(itemsFromCartIndex, 1); 
+          localStorage.setItem('cart',JSON.stringify(itemsFromCart)); 
+          article.remove();
+          
+          /*
+          if (itemsFromCart === null || itemsFromCart == 0) {
+            alert("Il n'y a plus d'article dans votre panier.");
+            return;
           }
+          */
+
+          totalQuantityAndPriceFromCart();
+          })    
         }
         deleteItemsFromCart()
         
         // Calcul total du prix et des quantités des éléments du panier
         function totalQuantityAndPriceFromCart() {
-          const itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[]
+          itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
 
           let totalQuantityItems = 0;
           let totalPriceItems = 0;
