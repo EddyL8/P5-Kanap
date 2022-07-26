@@ -152,3 +152,156 @@ fetch ('http://localhost:3000/api/products')
       }
     }
   })
+    // Message d'erreur
+    .catch(err => console.log(err, 'Données non accessibles'))
+    
+// FORMULAIRE
+// Création des expressions régulières (regex)
+const regexName =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/;
+const regexCity =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/;
+const regexAddress =/^[a-zA-Z0-9-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/;
+const regexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+// Sélection des éléments du formulaire
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const email = document.getElementById("email");
+
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+const addressErrorMsg = document.getElementById("addressErrorMsg");
+const cityErrorMsg = document.getElementById("cityErrorMsg");
+const emailErrorMsg = document.getElementById("emailErrorMsg");
+
+// Vérification des champs du formulaire
+firstName.addEventListener("input", (e) => {
+  e.preventDefault();
+  if (regexName.test(firstName.value) == false || firstName.value == "") {
+    firstName.style.border = "#FF3232 solid 3px";
+    firstNameErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
+    return false;
+  } else {
+    firstName.style.border = "#00CB00 solid 3px";
+    firstNameErrorMsg.textContent = "\u2714\uFE0F";
+    return true;
+  }
+});
+
+lastName.addEventListener("input", (e) => {
+  e.preventDefault();
+  if (regexName.test(lastName.value) == false || lastName.value == "") {
+    lastName.style.border = "#FF3232 solid 3px";
+    lastNameErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
+    return false;
+  } else {
+    lastName.style.border = "#00CB00 solid 3px";
+    lastNameErrorMsg.textContent = "\u2714\uFE0F";
+    return true;
+  }
+});
+
+address.addEventListener("input", (e) => {
+  e.preventDefault();
+  if (regexAddress.test(address.value) == false || address.value == "") {
+    address.style.border = "#FF3232 solid 3px";
+    addressErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
+    return false;
+  } else {
+    address.style.border = "#00CB00 solid 3px";
+    addressErrorMsg.textContent = "\u2714\uFE0F";
+    return true;
+  }
+});
+
+city.addEventListener("input", (e) => {
+  e.preventDefault();
+  if (regexCity.test(city.value) == false || city.value == "") {
+    city.style.border = "#FF3232 solid 3px";
+    cityErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
+    return false;
+  } else {
+    city.style.border = "#00CB00 solid 3px";
+    cityErrorMsg.textContent = "\u2714\uFE0F";
+    return true;
+  }
+});
+
+email.addEventListener("input", (e) => {
+  e.preventDefault();
+  if (regexEmail.test(email.value) == false || email.value == "") {
+    email.style.border = "#FF3232 solid 3px";
+    emailErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F Format attendu : exemple@emailvalide.fr";
+    return false; 
+  }
+  else {
+    email.style.border = "#00CB00 solid 3px";
+    emailErrorMsg.textContent = "\u2714\uFE0F";
+    return true;
+  }
+});
+
+const order = document.getElementById("order");
+
+order.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  // Tableau des données saisies par l'utilisateur
+  let contact = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    address: address.value,
+    city: city.value,
+    email: email.value,
+  };
+
+  if (
+    firstName.value === "" ||
+    lastName.value === "" ||
+    address.value === "" ||
+    city.value === "" ||
+    email.value === ""
+  ) {
+      alert("Renseignez tous les champs du formulaire pour passer la commande !");
+  }
+
+  else {
+    // Création et récupération des id des produits
+    const products = [];
+    for (let item of itemsFromCart) {
+      products.push(item.id);
+    }
+
+    const data = {
+      contact, products,
+    };
+
+    // Requête de l'API avec la méthode POST et redirection de l'utilisateur vers la page confirmation
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Accept": "application/json", 
+        "Content-Type": "application/json"
+      },
+    })
+
+    .then(res => {
+      if (res.ok) {
+        console.log(res);
+        return res.json();
+      }
+    })
+
+    .then(data => {
+        // Redirection sur la page de confirmation et affichage du numéro de commande généré
+        window.location = `confirmation.html?orderId=${data.orderId}`;
+        console.log(orderId);
+        
+        localStorage.clear(); 
+    })
+    // Message d'erreur
+    .catch(err => console.log(err, 'Données non accessibles'))
+  }
+});
