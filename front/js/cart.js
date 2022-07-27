@@ -4,6 +4,8 @@ let itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
 fetch ('http://localhost:3000/api/products')
   .then(res => {
     if (res.ok) {
+      //Quentin : conseil de bonne pratique : durant le dev, logguer c'est bien :) 
+      //Par contre, quand le dev est fini, logguer c'est offrir sur un plateau d'argent à une personne externe le comportement interne de l'application. Voir pire, les données des utilisateurs 😱
       console.log(res);
       return res.json();
     }
@@ -158,7 +160,10 @@ fetch ('http://localhost:3000/api/products')
 // FORMULAIRE
 // Création des expressions régulières (regex)
 const regexName =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/;
-const regexCity =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/;
+//Quentin : si j'habite au pays de Galles je peux avoir des soucis avec ce RegEx si je réside à Connah's Quay
+//https://fr.wikipedia.org/wiki/Liste_des_communautés_du_pays_de_Galles
+//oui je pinaille, mais attention avec les RegEx :P
+const regexCity =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/; 
 const regexAddress =/^[a-zA-Z0-9-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/;
 const regexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -178,10 +183,13 @@ const emailErrorMsg = document.getElementById("emailErrorMsg");
 // Vérification des champs du formulaire
 firstName.addEventListener("input", (e) => {
   e.preventDefault();
+  //Quentin : tu peux synthétiser tes booléens en utilisant la négation (!). En outre tu peux gagner "un chouilla" de performance en inversant juste les 2 condition autour du OU. On peut en parler jeudi ;) 
   if (regexName.test(firstName.value) == false || firstName.value == "") {
-    firstName.style.border = "#FF3232 solid 3px";
+    //Quentin : excellente idée UX 🤩
+    firstName.style.border = "#FF3232 solid 3px"; 
+    //Quentin et avec des emoji, super idée ! 🤩 Par contre quitte a partir là dessus, le message d'erreur n'est pas super explicite 😐
     firstNameErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
-    return false;
+    return false; //Quentin : bonne pratique, cela garantis la compatibilité avec d'ancien browser. Mais avec PreventDefault tu couvres déja un grand nombre de browser
   } else {
     firstName.style.border = "#00CB00 solid 3px";
     firstNameErrorMsg.textContent = "\u2714\uFE0F";
@@ -230,9 +238,10 @@ city.addEventListener("input", (e) => {
 
 email.addEventListener("input", (e) => {
   e.preventDefault();
-  if (regexEmail.test(email.value) == false || email.value == "") {
+   if (regexEmail.test(email.value) == false || email.value == "") { 
     email.style.border = "#FF3232 solid 3px";
-    emailErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F Format attendu : exemple@emailvalide.fr";
+    //Quentin : excellente idée l'exemple. 😄
+    emailErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F Format attendu : exemple@emailvalide.fr"; 
     return false; 
   }
   else {
@@ -256,6 +265,8 @@ order.addEventListener("click", (e) => {
     email: email.value,
   };
 
+  //Quentin : avec l'objet contact au dessus, tu peux utiliser la fonction .reduce() Elle est un peu étrange à utiliser mais bien pratique 🤔
+  //et pas besoin de faire l'égalité === "" , il y a la Truthyness qui aide https://developer.mozilla.org/fr/docs/Glossary/Truthy
   if (
     firstName.value === "" ||
     lastName.value === "" ||
@@ -268,6 +279,7 @@ order.addEventListener("click", (e) => {
 
   else {
     // Création et récupération des id des produits
+    //Quentin : tu peux utiliser la fonction .map() pour faciliter l'opération ;)
     const products = [];
     for (let item of itemsFromCart) {
       products.push(item.id);
