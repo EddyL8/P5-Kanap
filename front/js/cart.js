@@ -4,7 +4,6 @@ let itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
 fetch ('http://localhost:3000/api/products')
   .then(res => {
     if (res.ok) {
-      console.log(res);
       return res.json();
     }
   })
@@ -125,7 +124,7 @@ fetch ('http://localhost:3000/api/products')
           totalQuantityAndPriceFromCart();
           })    
         }
-        deleteItemsFromCart()
+        deleteItemsFromCart();
         
         // Calcul total du prix et des quantités des éléments du panier
         function totalQuantityAndPriceFromCart() {
@@ -154,7 +153,7 @@ fetch ('http://localhost:3000/api/products')
     }
   })
   // Message d'erreur
-  .catch(err => console.log(err, 'Données non accessibles'))
+  .catch(err => console.error(err, 'Données non accessibles'));
   
 // FORMULAIRE
 // Création des expressions régulières (regex)
@@ -179,11 +178,14 @@ const emailErrorMsg = document.getElementById("emailErrorMsg");
 // Vérification des champs du formulaire
 firstName.addEventListener("input", (e) => {
   e.preventDefault();
+
   if (regexName.test(firstName.value) == false || firstName.value == "") {
     firstName.style.border = "#FF3232 solid 3px";
     firstNameErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
     return false;
-  } else {
+  } 
+  
+  else {
     firstName.style.border = "#00CB00 solid 3px";
     firstNameErrorMsg.textContent = "\u2714\uFE0F";
     return true;
@@ -192,11 +194,14 @@ firstName.addEventListener("input", (e) => {
 
 lastName.addEventListener("input", (e) => {
   e.preventDefault();
+
   if (regexName.test(lastName.value) == false || lastName.value == "") {
     lastName.style.border = "#FF3232 solid 3px";
     lastNameErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
     return false;
-  } else {
+  } 
+  
+  else {
     lastName.style.border = "#00CB00 solid 3px";
     lastNameErrorMsg.textContent = "\u2714\uFE0F";
     return true;
@@ -205,11 +210,13 @@ lastName.addEventListener("input", (e) => {
 
 address.addEventListener("input", (e) => {
   e.preventDefault();
+
   if (regexAddress.test(address.value) == false || address.value == "") {
     address.style.border = "#FF3232 solid 3px";
     addressErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
     return false;
-  } else {
+  } 
+  else {
     address.style.border = "#00CB00 solid 3px";
     addressErrorMsg.textContent = "\u2714\uFE0F";
     return true;
@@ -218,6 +225,7 @@ address.addEventListener("input", (e) => {
 
 city.addEventListener("input", (e) => {
   e.preventDefault();
+
   if (regexCity.test(city.value) == false || city.value == "") {
     city.style.border = "#FF3232 solid 3px";
     cityErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
@@ -233,6 +241,7 @@ city.addEventListener("input", (e) => {
 
 email.addEventListener("input", (e) => {
   e.preventDefault();
+
   if (regexEmail.test(email.value) == false || email.value == "") {
     email.style.border = "#FF3232 solid 3px";
     emailErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F Format attendu : exemple@emailvalide.fr";
@@ -291,19 +300,19 @@ order.addEventListener("click", (e) => {
 
       .then(res => {
         if (res.ok) {
-          console.log(res);
           return res.json();
         }
       })
+
       .then(data => {
           // Redirection sur la page de confirmation et affichage du numéro de commande généré
           window.location = `confirmation.html?orderId=${data.orderId}`;
-          console.log(orderId);
           
           localStorage.clear(); 
       })
+
       // Message d'erreur
-      .catch(err => console.log(err, 'Données non accessibles'))
+      .catch(err => console.error(err, 'Données non accessibles'));
     }
   }
 });

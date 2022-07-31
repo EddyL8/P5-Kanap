@@ -2,26 +2,24 @@
 const str = window.location.href;
 const newUrl = new URL(str);
 const productId = newUrl.searchParams.get('id');
-console.log(str, newUrl, productId);
 
 // Requête de l'api et récupération des données
 fetch(`http://localhost:3000/api/products/${productId}`)
     .then(res => {
         if (res.ok) {
-            console.log(res);
             return res.json();
         }
     })
+
     .then((product) => {
         showProduct(product);
     })
+
     // Message d'erreur
-    .catch(err => console.log(err, 'Données non accessibles'))
+    .catch(err => console.error(err, 'Données non accessibles'));
 
 // Insertion des éléments dans la page produit
 const showProduct = (product) => {
-    console.log(product);
-
     const productImgUrl = document.createElement("img");
     document.querySelector(".item__img").appendChild(productImgUrl);
     productImgUrl.src = product.imageUrl;
@@ -49,7 +47,9 @@ const showProduct = (product) => {
     
     // Envoi au panier
     const addToCartButton = document.getElementById("addToCart");
-    addToCartButton.addEventListener("click", () => {
+    addToCartButton.addEventListener("click", (e) => {
+        e.preventDefault();
+
         const productColor = document.getElementById("colors").value;
         const productQuantity = document.getElementById("quantity").value;
 
@@ -73,10 +73,11 @@ const showProduct = (product) => {
             let foundProduct = cartFromLocalStorage.find(p => p.id === item.id && p.color === item.color); 
             if (foundProduct) { 
               foundProduct.quantity += item.quantity;
-            } else {
-              cartFromLocalStorage.push(item)  
+            } 
+            
+            else {
+              cartFromLocalStorage.push(item);  
             };
-            console.log(cartFromLocalStorage);
 
             localStorage.setItem("cart", JSON.stringify(cartFromLocalStorage));
         }
