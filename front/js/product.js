@@ -47,7 +47,6 @@ const showProduct = (product) => {
     select.appendChild(option);
    }
     
-
     // Envoi au panier
     const addToCartButton = document.getElementById("addToCart");
     addToCartButton.addEventListener("click", () => {
@@ -83,9 +82,8 @@ const showProduct = (product) => {
         }
 
         // Fenêtre popup d'ajout et de redirection vers le panier
-        if (window.confirm(`Votre sélection a été ajoutée au panier !\nCliquez sur "OK" pour le consulter, sinon sur "Annuler" pour poursuivre vos achats.`)) {
+        if (confirm(`Votre sélection a été ajoutée au panier !\nCliquez sur "OK" pour le consulter, sinon sur "Annuler" pour poursuivre vos achats.`)) {
             window.location.href = "cart.html";
-        }//Quentin : excellente idée UX (enfin, dark pattern selon moi) oui lorsqu'on a validé un item on essaye de pousser l'utilisateur à l'action (achat) ou à l'ajout d'autre éléments dans le panier. 
-        //par contre utiliser la box de confirmation n'est peut être pas la meilleur idée. On en reparle
+        }
     });
 }

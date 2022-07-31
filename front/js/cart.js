@@ -107,20 +107,21 @@ fetch ('http://localhost:3000/api/products')
         function deleteItemsFromCart() {
 
         deleteItem.addEventListener("click",(e) => {
-          e.preventDefault();    
-          const itemsFromCartIndex = itemsFromCart.findIndex(product => product.id === item.id && product.color === item.color);
-            
-          itemsFromCart.splice(itemsFromCartIndex, 1); 
-          localStorage.setItem('cart',JSON.stringify(itemsFromCart)); 
-          article.remove();
-          
-          /*
-          if (itemsFromCart === null || itemsFromCart == 0) {
-            alert("Il n'y a plus d'article dans votre panier.");
-            return;
-          }
-          */
+          e.preventDefault();
 
+          if (confirm("Êtes-vous sûr(e) de vouloir supprimer cet article ?")) {    
+            const itemsFromCartIndex = itemsFromCart.findIndex(product => product.id === item.id && product.color === item.color);
+              
+            itemsFromCart.splice(itemsFromCartIndex, 1); 
+            localStorage.setItem('cart',JSON.stringify(itemsFromCart)); 
+            article.remove();
+          } 
+          
+          if (itemsFromCart === null || itemsFromCart == 0) {
+            alert("Il n'y a plus d'articles dans votre panier.");
+            window.location.href = "index.html";
+          }
+          
           totalQuantityAndPriceFromCart();
           })    
         }
@@ -152,14 +153,14 @@ fetch ('http://localhost:3000/api/products')
       }
     }
   })
-    // Message d'erreur
-    .catch(err => console.log(err, 'Données non accessibles'))
-    
+  // Message d'erreur
+  .catch(err => console.log(err, 'Données non accessibles'))
+  
 // FORMULAIRE
 // Création des expressions régulières (regex)
-const regexName =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/;
-const regexCity =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/;
-const regexAddress =/^[a-zA-Z0-9-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s]+$/;
+const regexName =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ,.'-\s]+$/;
+const regexCity =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ,.'-\s]+$/;
+const regexAddress =/^[a-zA-Z0-9-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ,.'-\s]+$/;
 const regexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 // Sélection des éléments du formulaire
@@ -221,7 +222,9 @@ city.addEventListener("input", (e) => {
     city.style.border = "#FF3232 solid 3px";
     cityErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F";
     return false;
-  } else {
+  } 
+  
+  else {
     city.style.border = "#00CB00 solid 3px";
     cityErrorMsg.textContent = "\u2714\uFE0F";
     return true;
@@ -235,6 +238,7 @@ email.addEventListener("input", (e) => {
     emailErrorMsg.textContent = "Saisie incorrect ou manquante\u26A0\uFE0F Format attendu : exemple@emailvalide.fr";
     return false; 
   }
+
   else {
     email.style.border = "#00CB00 solid 3px";
     emailErrorMsg.textContent = "\u2714\uFE0F";
@@ -242,66 +246,64 @@ email.addEventListener("input", (e) => {
   }
 });
 
+
 const order = document.getElementById("order");
 
 order.addEventListener("click", (e) => {
   e.preventDefault();
 
-  // Tableau des données saisies par l'utilisateur
-  let contact = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    address: address.value,
-    city: city.value,
-    email: email.value,
-  };
-
-  if (
-    firstName.value === "" ||
-    lastName.value === "" ||
-    address.value === "" ||
-    city.value === "" ||
-    email.value === ""
-  ) {
-      alert("Renseignez tous les champs du formulaire pour passer la commande !");
-  }
+  // Condition qui empêche de générer un numéro de commande si le panier est vide
+  if (itemsFromCart === null || itemsFromCart == 0) {
+    alert("Votre panier est vide ! Ajoutez des articles pour passer une commande.");
+  } 
 
   else {
-    // Création et récupération des id des produits
-    const products = [];
-    for (let item of itemsFromCart) {
-      products.push(item.id);
-    }
-
-    const data = {
-      contact, products,
+    // Tableau des données saisies par l'utilisateur
+    let contact = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      address: address.value,
+      city: city.value,
+      email: email.value,
     };
 
-    // Requête de l'API avec la méthode POST et redirection de l'utilisateur vers la page confirmation
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Accept": "application/json", 
-        "Content-Type": "application/json"
-      },
-    })
+    if (firstName.value == "" || lastName.value == "" || address.value == "" || city.value == "" || email.value == "") {
+        alert("Renseignez tous les champs du formulaire pour passer la commande !");
+    }
 
-    .then(res => {
-      if (res.ok) {
-        console.log(res);
-        return res.json();
-      }
-    })
+    else {
+      // Création et récupération des id des produits
+      const products = itemsFromCart.map(p => p.id);
 
-    .then(data => {
-        // Redirection sur la page de confirmation et affichage du numéro de commande généré
-        window.location = `confirmation.html?orderId=${data.orderId}`;
-        console.log(orderId);
-        
-        localStorage.clear(); 
-    })
-    // Message d'erreur
-    .catch(err => console.log(err, 'Données non accessibles'))
+      const data = {
+        contact, products,
+      };
+
+      // Requête de l'API avec la méthode POST et redirection de l'utilisateur vers la page confirmation
+      fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Accept": "application/json", 
+          "Content-Type": "application/json"
+        },
+      })
+
+      .then(res => {
+        if (res.ok) {
+          console.log(res);
+          return res.json();
+        }
+      })
+      .then(data => {
+          // Redirection sur la page de confirmation et affichage du numéro de commande généré
+          window.location = `confirmation.html?orderId=${data.orderId}`;
+          console.log(orderId);
+          
+          localStorage.clear(); 
+      })
+      // Message d'erreur
+      .catch(err => console.log(err, 'Données non accessibles'))
+    }
   }
 });
