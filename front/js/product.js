@@ -45,7 +45,7 @@ const showProduct = (product) => {
     select.appendChild(option);
    }
     
-    // Envoi au panier
+    // Configuration d'un évènement au clic du bouton "addToCart" pour l'envoi au panier
     const addToCartButton = document.getElementById("addToCart");
     addToCartButton.addEventListener("click", (e) => {
         e.preventDefault();
@@ -55,8 +55,8 @@ const showProduct = (product) => {
 
         // Alerte choix couleur et quantité
         if (productColor == "" || productQuantity <= 0 || productQuantity >= 101) { 
-            alert("Veuillez choisir une couleur et une quantité valide pour ajouter un produit au panier");
-            return false
+            alert("Veuillez choisir une couleur et une quantité valide pour ajouter un produit au panier.");
+            return false;
         }
 
         else {
@@ -67,18 +67,22 @@ const showProduct = (product) => {
                 quantity: parseInt(productQuantity) // Utilisation de parseInt pour additionner les quantités
             }
 
+            // Récupération des données du local storage, création d'un tableau (array) si ce dernier est vide
             const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart"))??[];
 
             // Vérification des produits (même id et même couleur) et ajout dans le panier
-            let foundProduct = cartFromLocalStorage.find(p => p.id === item.id && p.color === item.color); 
+            let foundProduct = cartFromLocalStorage.find(p => p.id === item.id && p.color === item.color);
+
             if (foundProduct) { 
-              foundProduct.quantity += item.quantity;
+                foundProduct.quantity += item.quantity;
             } 
             
             else {
-              cartFromLocalStorage.push(item);  
+                // Ajout d'un article au panier si son id et sa couleur n'y sont pas déjà
+                cartFromLocalStorage.push(item);  
             };
 
+            // Enregistrement dans le local storage
             localStorage.setItem("cart", JSON.stringify(cartFromLocalStorage));
         }
 

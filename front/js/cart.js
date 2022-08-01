@@ -83,11 +83,12 @@ fetch ('http://localhost:3000/api/products')
               deleteItem.className = "deleteItem";
               cart__item__content__settings__delete.appendChild(deleteItem).textContent = "Supprimer";
 
-        // Changement de quantité dans le panier
+        // Fonction de changement de quantité dans le panier
         function changeItemsQuantityFromCart() {
           input.addEventListener("change" ,(e) => {
             e.preventDefault();
 
+            // Message si une quantité invalide est saisie
             if(input.value <= 0 || input.value > 100) {
               alert('Veuillez saisir une quantité entre 1 et 100.');
               return;
@@ -102,12 +103,13 @@ fetch ('http://localhost:3000/api/products')
         } 
         changeItemsQuantityFromCart();
 
-        // Suppression d'un produit dans le panier
+        // Fonction de suppression d'un produit dans le panier
         function deleteItemsFromCart() {
 
         deleteItem.addEventListener("click",(e) => {
           e.preventDefault();
 
+          // Message de demande de confirmation pour supprimer un produit du panier
           if (confirm("Êtes-vous sûr(e) de vouloir supprimer cet article ?")) {    
             const itemsFromCartIndex = itemsFromCart.findIndex(product => product.id === item.id && product.color === item.color);
               
@@ -116,6 +118,7 @@ fetch ('http://localhost:3000/api/products')
             article.remove();
           } 
           
+          // Message si tous les éléments du panier sont supprimés
           if (itemsFromCart === null || itemsFromCart == 0) {
             alert("Il n'y a plus d'articles dans votre panier.");
             window.location.href = "index.html";
@@ -126,7 +129,7 @@ fetch ('http://localhost:3000/api/products')
         }
         deleteItemsFromCart();
         
-        // Calcul total du prix et des quantités des éléments du panier
+        // Fonction de calcul total du prix et des quantités des éléments du panier
         function totalQuantityAndPriceFromCart() {
           itemsFromCart = JSON.parse(localStorage.getItem("cart"))??[];
 
@@ -143,6 +146,7 @@ fetch ('http://localhost:3000/api/products')
             totalPriceItems += priceItemsFromCart;
           }
           
+          // Affichage du total des quantités et des prix
           const totalQuantity = document.getElementById('totalQuantity');
           const totalPrice = document.getElementById('totalPrice');
           totalQuantity.textContent = totalQuantityItems;
@@ -162,7 +166,7 @@ const regexCity =/^[a-zA-Z-áàâäãåçéèêëíìîïñóòôöõúùûüý�
 const regexAddress =/^[a-zA-Z0-9-áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ,.'-\s]+$/;
 const regexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-// Sélection des éléments du formulaire
+// Récupération des éléments du formulaire
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
 const address = document.getElementById("address");
@@ -255,7 +259,6 @@ email.addEventListener("input", (e) => {
   }
 });
 
-
 const order = document.getElementById("order");
 
 order.addEventListener("click", (e) => {
@@ -276,6 +279,7 @@ order.addEventListener("click", (e) => {
       email: email.value,
     };
 
+    // Message si tous les champs du formulaire ne sont pas renseignés
     if (firstName.value == "" || lastName.value == "" || address.value == "" || city.value == "" || email.value == "") {
         alert("Renseignez tous les champs du formulaire pour passer la commande !");
     }
@@ -308,6 +312,7 @@ order.addEventListener("click", (e) => {
           // Redirection sur la page de confirmation et affichage du numéro de commande généré
           window.location = `confirmation.html?orderId=${data.orderId}`;
           
+          // Nettoyage du local storage, vide donc le panier
           localStorage.clear(); 
       })
 
